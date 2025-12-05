@@ -17,33 +17,33 @@ from veadk import Agent, Runner
 from veadk.knowledgebase.knowledgebase import KnowledgeBase
 from veadk.memory.short_term_memory import ShortTermMemory
 
-
-async def main():
-    # 准备多个知识源
-    with open("/tmp/tech.txt", "w") as f:
-        f.write("Python: programming language\nJavaScript: web development")
-    with open("/tmp/products.txt", "w") as f:
-        f.write("Laptop: $1200\nPhone: $800\nTablet: $600")
+# 准备多个知识源
+with open("/tmp/tech.txt", "w") as f:
+    f.write("Python: programming language\nJavaScript: web development")
+with open("/tmp/products.txt", "w") as f:
+    f.write("Laptop: $1200\nPhone: $800\nTablet: $600")
 
     # 创建知识库
-    kb = KnowledgeBase(backend="viking", app_name="test_app")
-    kb.add_from_files(files=["/tmp/tech.txt", "/tmp/products.txt"])
+kb = KnowledgeBase(backend="viking", app_name="test_app")
+kb.add_from_files(files=["/tmp/tech.txt", "/tmp/products.txt"])
 
-    # 创建agent
-    agent = Agent(
-        name="test_agent",
-        knowledgebase=kb,
-        instruction="You are a helpful assistant. Be concise and friendly.",
-    )
+# 创建agent
+agent = Agent(
+    name="test_agent",
+    knowledgebase=kb,
+    instruction="You are a helpful assistant. Be concise and friendly.",
+)
 
-    # 运行
-    runner = Runner(
-        agent=agent,
-        short_term_memory=ShortTermMemory(),
-        app_name="test_app",
-        user_id="test_user",
-    )
+# 运行
+runner = Runner(
+    agent=agent,
+    short_term_memory=ShortTermMemory(),
+    app_name="test_app",
+    user_id="test_user",
+)
 
+
+async def main():
     session_id = "test_session"
 
     query = "What is Python?"
@@ -53,3 +53,5 @@ async def main():
 
 if __name__ == "__main__":
     asyncio.run(main())
+
+root_agent = agent
