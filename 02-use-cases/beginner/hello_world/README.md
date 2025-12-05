@@ -42,10 +42,10 @@ veadk web
 ```
 
 ### 4. 部署到vefaas
+> **安全提示：请勿在生产环境中禁用密钥认证。确保 `VEFAAS_ENABLE_KEY_AUTH` 保持为 `true`（或不设置，默认为开启），并正确配置访问密钥和角色。只有在本地受控环境调试时，才可临时关闭认证，并务必加以警告。**
+
 ```bash
 cd hello_world
-# 这一步直接运行即可
-export VEFAAS_ENABLE_KEY_AUTH=false
 # 这一步需要把YOUR_AK换成自己的ak
 export VOLCENGINE_ACCESS_KEY=YOUR_AK
 # 这一步需要把YOUR_AK换成自己的sk
