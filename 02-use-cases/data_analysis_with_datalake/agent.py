@@ -43,29 +43,9 @@ logger = logging.getLogger(__name__)
 
 tools = [catalog_discovery, duckdb_sql_execution, lancedb_hybrid_execution, video_generate]
 
-# 定义带记忆的 Agent 类
-class DataAnalysisAgent(Agent):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-
-    def run(self, input_text, session_id="default", **kwargs):
-        # 从记忆中检索历史对话
-        history = self.memory_manager.get_messages(session_id=session_id)
-        # 构建包含历史对话的完整指令
-        full_instruction = self.instruction
-        for role, content in history:
-            full_instruction += f"\n{role}: {content}"
-        self.instruction = full_instruction
-        # 处理当前用户输入
-        response = super().run(input_text, **kwargs)
-        # 将当前交互保存到记忆
-        self.memory_manager.add_message(session_id=session_id, role="user", content=input_text)
-        self.memory_manager.add_message(session_id=session_id, role="assistant", content=response)
-        return response
-
 # 创建带记忆的 Agent
 model_name = os.getenv("MODEL_AGENT_NAME", "doubao-seed-1-6-251015")  # 默认使用更主流的豆包模型
-root_agent = DataAnalysisAgent(
+root_agent = Agent(
     description="基于LanceDB的数据检索Agent，支持结构化和向量查询。典型问题包括：1.你有哪些数据？2.给我一些样例数据？3.Ang Lee 评分超过7分的有哪些电影？4.Ang Lee 评分超过7分的电影中，有哪个电影海报中含有动物？5.Life of Pi 的电影海报，变成视频",
     instruction=SYSTEM_PROMPT,
     model_name=model_name,
