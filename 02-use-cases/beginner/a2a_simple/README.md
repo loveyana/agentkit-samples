@@ -2,9 +2,11 @@
 
 基于火山引擎 VeADK 和 A2A (Agent-to-Agent) 协议构建的分布式智能体示例，展示如何实现智能体之间的通信和协作。
 
-## 📋 概述
+## 概述
 
-本示例演示 A2A 协议的基础应用，展示如何构建可互操作的分布式智能体系统：
+本示例演示 A2A 协议的基础应用，展示如何构建可互操作的分布式智能体系统。
+
+## 核心功能
 
 - A2A 协议：标准化的智能体间通信协议
 - 远程服务：提供工具能力的远程 Agent
@@ -12,7 +14,7 @@
 - 工具能力：投掷骰子和检查质数
 - 状态管理：跨工具调用的状态持久化
 
-## 🏗️ 架构
+## Agent 能力
 
 ```
 方式一：直接客户端调用
@@ -34,21 +36,40 @@ A2A 协议 (HTTP/JSONRPC)
         └── check_prime 工具 (检查质数)
 ```
 
+## 目录结构说明
+
+```
+a2a_simple/
+├── agent.py                 # 本地 Agent 服务（端口 8000，可调用远程 Agent）
+├── local_client.py          # A2A 客户端实现
+├── remote/                  # 远程 Agent 服务
+│   ├── agent.py            # Agent 定义和 A2A App（端口 8001）
+│   ├── agentkit.yaml       # AgentKit 部署配置
+│   ├── requirements.txt    # Python 依赖
+│   ├── Dockerfile          # Docker 镜像构建
+│   └── tools/              # 工具实现
+│       ├── roll_die.py     # 投掷骰子工具
+│       └── check_prime.py  # 质数检查工具
+├── requirements.txt         # 客户端依赖
+├── pyproject.toml          # 项目配置
+└── README.md               # 项目说明文档
+```
+
 ### 核心组件
 
 | 组件 | 描述 |
 |-----------|-------------|
-| **远程 Agent** | [remote/agent.py](remote/agent.py:14-40) - hello_world_agent，提供工具服务（端口 8001） |
-| **本地 Agent** | [agent.py](agent.py:16-21) - a2a_sample_agent，具有 add 工具和 sub_agents（端口 8000） |
-| **本地客户端** | [local_client.py](local_client.py) - A2ASimpleClient，调用远程服务 |
-| **工具：roll_die** | [remote/tools/roll_die.py](remote/tools/roll_die.py) - 投掷骰子 |
-| **工具：check_prime** | [remote/tools/check_prime.py](remote/tools/check_prime.py) - 检查质数 |
+| **远程 Agent** | [remote/agent.py](https://github.com/volcengine/agentkit-samples/blob/main/02-use-cases/beginner/a2a_simple/remote/agent.py#L14-L40) - hello_world_agent，提供工具服务（端口 8001） |
+| **本地 Agent** | [agent.py](https://github.com/volcengine/agentkit-samples/blob/main/02-use-cases/beginner/a2a_simple/agent.py#L16-L21) - a2a_sample_agent，具有 add 工具和 sub_agents（端口 8000） |
+| **本地客户端** | [local_client.py](https://github.com/volcengine/agentkit-samples/blob/main/02-use-cases/beginner/a2a_simple/local_client.py) - A2ASimpleClient，调用远程服务 |
+| **工具：roll_die** | [remote/tools/roll_die.py](https://github.com/volcengine/agentkit-samples/blob/main/02-use-cases/beginner/a2a_simple/remote/tools/roll_die.py) - 投掷骰子 |
+| **工具：check_prime** | [remote/tools/check_prime.py](https://github.com/volcengine/agentkit-samples/blob/main/02-use-cases/beginner/a2a_simple/remote/tools/check_prime.py) - 检查质数 |
 | **AgentCard** | Agent 元数据和能力描述 |
-| **项目配置** | [remote/agentkit.yaml](remote/agentkit.yaml) - AgentKit 部署配置 |
+| **项目配置** | [remote/agentkit.yaml](https://github.com/volcengine/agentkit-samples/blob/main/02-use-cases/beginner/a2a_simple/remote/agentkit.yaml) - AgentKit 部署配置 |
 
 ### 代码特点
 
-**本地 Agent 定义**（[agent.py](agent.py:16-21)）：
+**本地 Agent 定义**（[agent.py](https://github.com/volcengine/agentkit-samples/blob/main/02-use-cases/beginner/a2a_simple/agent.py#L16-L21)）:
 ```python
 agent = Agent(
     name="a2a_sample_agent",
@@ -58,7 +79,7 @@ agent = Agent(
 )
 ```
 
-**远程 Agent 定义**（[remote/agent.py](remote/agent.py:14-40)）：
+**远程 Agent 定义**（[remote/agent.py](https://github.com/volcengine/agentkit-samples/blob/main/02-use-cases/beginner/a2a_simple/remote/agent.py#L14-L40)）：
 ```python
 root_agent = Agent(
     name='hello_world_agent',
@@ -76,7 +97,7 @@ root_agent = Agent(
 )
 ```
 
-**AgentCard 配置**（[remote/agent.py](remote/agent.py:48-58)）：
+**AgentCard 配置**（[remote/agent.py](https://github.com/volcengine/agentkit-samples/blob/main/02-use-cases/beginner/a2a_simple/remote/agent.py#L48-L58)）：
 ```python
 agent_card = AgentCard(
   capabilities=AgentCapabilities(streaming=True),
@@ -91,7 +112,7 @@ agent_card = AgentCard(
 )
 ```
 
-**本地客户端调用**（[local_client.py](local_client.py:32-97)）：
+**本地客户端调用**（[local_client.py](https://github.com/volcengine/agentkit-samples/blob/main/02-use-cases/beginner/a2a_simple/local_client.py#L32-L97)）：
 ```python
 async def create_task(self, agent_url: str, message: str) -> str:
     # 获取 Agent Card
@@ -109,7 +130,7 @@ async def create_task(self, agent_url: str, message: str) -> str:
         responses.append(response)
 ```
 
-**工具状态管理**（[remote/tools/roll_die.py](remote/tools/roll_die.py:4-18)）：
+**工具状态管理**（[remote/tools/roll_die.py](https://github.com/volcengine/agentkit-samples/blob/main/02-use-cases/beginner/a2a_simple/remote/tools/roll_die.py#L4-L18)）：
 ```python
 def roll_die(sides: int, tool_context: ToolContext) -> int:
     result = random.randint(1, sides)
@@ -122,11 +143,9 @@ def roll_die(sides: int, tool_context: ToolContext) -> int:
     return result
 ```
 
-## 🚀 快速开始
+## 本地运行
 
-### 前置条件
-
-**重要提示**：在运行本示例之前，请先访问 [AgentKit 控制台授权页面](https://console.volcengine.com/agentkit/region:agentkit+cn-beijing/auth?projectName=default) 对所有依赖服务进行授权，确保案例能够正常执行。
+### 前置准备
 
 **1. 开通火山方舟模型服务**
 
@@ -137,7 +156,7 @@ def roll_die(sides: int, tool_context: ToolContext) -> int:
 
 - 参考 [用户指南](https://www.volcengine.com/docs/6291/65568?lang=zh) 获取 AK/SK
 
-### 安装步骤
+### 依赖安装
 
 #### 1. 安装 uv 包管理器
 
@@ -152,16 +171,33 @@ brew install uv
 #### 2. 初始化项目依赖
 
 ```bash
+# 进入项目目录
 cd 02-use-cases/beginner/a2a_simple
+```
 
-# 初始化虚拟环境和安装依赖
+您可以通过 `pip` 工具来安装本项目依赖：
+
+```bash
+pip install -r requirements.txt
+```
+
+或者使用 `uv` 工具来安装本项目依赖：
+
+```bash
+# 如果没有 `uv` 虚拟环境，可以使用命令先创建一个虚拟环境
+uv venv --python 3.12
+
+# 使用 `pyproject.toml` 管理依赖
 uv sync
+
+# 使用 `requirements.txt` 管理依赖
+uv pip install -r requirements.txt
 
 # 激活虚拟环境
 source .venv/bin/activate
 ```
 
-#### 3. 配置环境变量
+### 环境准备
 
 ```bash
 # 火山引擎访问凭证（必需）
@@ -169,32 +205,9 @@ export VOLCENGINE_ACCESS_KEY=<Your Access Key>
 export VOLCENGINE_SECRET_KEY=<Your Secret Key>
 ```
 
-### 运行方式
+### 调试方法
 
-#### 方式一：部署到 AgentKit 平台（推荐）
-
-**部署远程 Agent**：
-```bash
-cd 02-use-cases/beginner/a2a_simple/remote
-
-# 配置部署参数（重要：agent_type 必须为 a2a）
-agentkit config
-
-# 查看配置
-agentkit config --show
-
-# 启动云端服务
-agentkit launch
-
-# 测试部署的 Agent
-agentkit invoke 'Hello, show me one number.'
-```
-
-**重要提示**：
-- 务必确保 `agentkit.yaml` 中的 `common.agent_type` 配置值为 `a2a`
-- 否则无法成功部署 A2A 类型的 Agent
-
-#### 方式二：使用 VeADK Web 调试界面
+#### 方式一：使用 VeADK Web 调试界面
 
 ```bash
 # 进入上级目录
@@ -208,7 +221,7 @@ veadk web
 
 Web 界面提供图形化对话测试环境，支持实时查看远程调用过程。
 
-#### 方式三：命令行测试（推荐学习）
+#### 方式二：命令行测试（推荐学习）
 
 **步骤 1：启动远程 Agent 服务**
 ```bash
@@ -241,31 +254,44 @@ python agent.py
 - **远程 Agent**（端口 8001）：提供 roll_die 和 check_prime 工具
 - **本地 Agent**（端口 8000）：提供 add 工具，并可调用远程 Agent
 
-#### 方式四：部署到火山引擎 veFaaS
+## Agentkit 部署
 
-**安全提示**：
-> 以下命令仅用于开发测试。生产环境必须启用 `VEFAAS_ENABLE_KEY_AUTH=true`（默认值）并配置 IAM 角色。
+### 前置准备
+
+**重要提示**：在运行本示例之前，请先访问 [AgentKit 控制台授权页面](https://console.volcengine.com/agentkit/region:agentkit+cn-beijing/auth?projectName=default) 对所有依赖服务进行授权，确保案例能够正常执行。
+
+**1. 开通火山方舟模型服务**
+
+- 访问 [火山方舟控制台](https://exp.volcengine.com/ark?mode=chat)
+- 开通模型服务
+
+**2. 获取火山引擎访问凭证**
+
+- 参考 [用户指南](https://www.volcengine.com/docs/6291/65568?lang=zh) 获取 AK/SK
+
+### Agentkit 云上部署
 
 ```bash
 cd 02-use-cases/beginner/a2a_simple/remote
 
-# 配置环境变量（仅测试用）
-export VEFAAS_ENABLE_KEY_AUTH=false
-export VOLCENGINE_ACCESS_KEY=<Your Access Key>
-export VOLCENGINE_SECRET_KEY=<Your Secret Key>
+# 配置部署参数（重要：agent_type 必须为 a2a）
+agentkit config
 
-# 基础部署（快速开始）
-veadk deploy --vefaas-app-name=a2a-dice-agent --use-adk-web
+# 查看配置
+agentkit config --show
 
-# 生产级部署（推荐）
-veadk deploy \
-  --vefaas-app-name=a2a-dice-agent \
-  --use-adk-web \
-  --veapig-instance-name=<Your veaPIG Instance> \
-  --iam-role "trn:iam::<Your Account ID>:role/<Your IAM Role>"
+# 启动云端服务
+agentkit launch
+
+# 测试部署的 Agent
+agentkit invoke 'Hello, show me one number.'
 ```
 
-## 💡 示例对话
+**重要提示**：
+- 务必确保 `agentkit.yaml` 中的 `common.agent_type` 配置值为 `a2a`
+- 否则无法成功部署 A2A 类型的 Agent
+
+## 示例提示词
 
 ### 基础能力测试
 
@@ -322,26 +348,9 @@ No prime numbers found.
 3 are prime numbers.
 ```
 
-## 📂 目录结构
+## 效果展示
 
-```
-a2a_simple/
-├── agent.py                 # 本地 Agent 服务（端口 8000，可调用远程 Agent）
-├── local_client.py          # A2A 客户端实现
-├── remote/                  # 远程 Agent 服务
-│   ├── agent.py            # Agent 定义和 A2A App（端口 8001）
-│   ├── agentkit.yaml       # AgentKit 部署配置
-│   ├── requirements.txt    # Python 依赖
-│   ├── Dockerfile          # Docker 镜像构建
-│   └── tools/              # 工具实现
-│       ├── roll_die.py     # 投掷骰子工具
-│       └── check_prime.py  # 质数检查工具
-├── requirements.txt         # 客户端依赖
-├── pyproject.toml          # 项目配置
-└── README.md               # 项目说明文档
-```
-
-## 🔍 技术要点
+## 技术要点
 
 ### A2A 协议
 
@@ -431,18 +440,22 @@ class MyAgentExecutor(A2aAgentExecutor):
 a2a_app.run(agent_card=agent_card, host="0.0.0.0", port=8000)
 ```
 
-## 🎯 下一步
+## 下一步
 
 完成 A2A Simple 示例后，可以探索更多功能：
 
-1. **[Multi Agents](../multi_agents/README.md)** - 构建多智能体协作系统
-2. **[Restaurant Ordering](../restaurant_ordering/README.md)** - 高级 Agent 特性
-3. **[Travel Concierge](../travel_concierge/README.md)** - 使用 Web 搜索工具
+1. **[Multi Agents](https://github.com/volcengine/agentkit-samples/tree/main/02-use-cases/beginner/multi_agents/README.md)** - 构建多智能体协作系统
+2. **[Restaurant Ordering](https://github.com/volcengine/agentkit-samples/tree/main/02-use-cases/beginner/restaurant_ordering/README.md)** - 高级 Agent 特性
+3. **[Travel Concierge](https://github.com/volcengine/agentkit-samples/tree/main/02-use-cases/beginner/travel_concierge/README.md)** - 使用 Web 搜索工具
 4. **分布式系统**：部署多个 A2A Agent 构建分布式智能体网络
 
-## 📖 参考资料
+## 参考资料
 
 - [VeADK 官方文档](https://volcengine.github.io/veadk-python/)
 - [AgentKit 开发指南](https://volcengine.github.io/agentkit-sdk-python/)
 - [A2A 协议规范](https://github.com/google/adk)
 - [火山方舟模型服务](https://console.volcengine.com/ark/region:ark+cn-beijing/overview?briefPage=0&briefType=introduce&type=new&projectName=default)
+
+## 代码许可
+
+本工程遵循 Apache 2.0 License

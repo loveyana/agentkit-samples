@@ -1,11 +1,11 @@
-from google.adk.agents.callback_context import CallbackContext
-from google.adk.tools.tool_context import ToolContext
-from typing import Any, Dict, Optional
-from google.adk.tools.base_tool import BaseTool
-from google.genai.types import Content, Part
-from copy import deepcopy
 import logging
 import re
+from copy import deepcopy
+from typing import Any, Dict, Optional
+
+from google.adk.tools.base_tool import BaseTool
+from google.adk.tools.tool_context import ToolContext
+from google.genai.types import Content, Part
 
 logger = logging.getLogger(__name__)
 
@@ -46,11 +46,11 @@ def filter_pii(
 
     # --- 敏感词黑名单 ---
     # 用于在 before_model_callback 中拦截不当请求。
-    BLOCKED_WORDS_CHINESE = [
-        "zanghua",
-        "minganci",
-        "bukexiangdeshi",
-    ]
+    # BLOCKED_WORDS_CHINESE = [
+    #     "zanghua",
+    #     "minganci",
+    #     "bukexiangdeshi",
+    # ]
 
     # --- 个人信息(PII)过滤规则 ---
     # 用于在 after_model_callback 中过滤模型响应中的个人信息。

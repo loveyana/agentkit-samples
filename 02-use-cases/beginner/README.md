@@ -341,7 +341,7 @@ Agent-to-Agent 协议，展示：
 
 **A**: 强烈推荐从 [Hello World](https://github.com/volcengine/agentkit-samples/tree/main/02-use-cases/beginner/hello_world) 开始，它涵盖了最基础的 Agent 创建和记忆管理。完成后根据您的需求选择：
 
-- 需要内容审核 → [Callback](callback/)
+- 需要内容审核 → [Callback](https://github.com/volcengine/agentkit-samples/tree/main/02-use-cases/beginner/callback)
 - 需要工具集成 → [MCP Simple](https://github.com/volcengine/agentkit-samples/tree/main/02-use-cases/beginner/mcp_simple) 或 [Travel Concierge](https://github.com/volcengine/agentkit-samples/tree/main/02-use-cases/beginner/travel_concierge)
 - 需要知识库 → [VikingDB](https://github.com/volcengine/agentkit-samples/tree/main/02-use-cases/beginner/vikingdb)
 - 需要多 Agent → [Multi Agents](https://github.com/volcengine/agentkit-samples/tree/main/02-use-cases/beginner/multi_agents)
