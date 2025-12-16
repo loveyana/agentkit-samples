@@ -116,13 +116,7 @@ brew install uv
 cd 02-use-cases/beginner/vikingdb
 ```
 
-您可以通过 `pip` 工具来安装本项目依赖：
-
-```bash
-pip install -r requirements.txt
-```
-
-或者使用 `uv` 工具来安装本项目依赖：
+使用 `uv` 工具来安装本项目依赖：
 
 ```bash
 # 如果没有 `uv` 虚拟环境，可以使用命令先创建一个虚拟环境
@@ -130,9 +124,6 @@ uv venv --python 3.12
 
 # 使用 `pyproject.toml` 管理依赖
 uv sync
-
-# 使用 `requirements.txt` 管理依赖
-uv pip install -r requirements.txt
 
 # 激活虚拟环境
 source .venv/bin/activate
@@ -147,6 +138,8 @@ export MODEL_AGENT_NAME=doubao-seed-1-6-251015
 # 火山引擎访问凭证（必需）
 export VOLCENGINE_ACCESS_KEY=<Your Access Key>
 export VOLCENGINE_SECRET_KEY=<Your Secret Key>
+# bucket需要用来上传本地文件，进而将文件从tos导入到知识库中
+export DATABASE_TOS_BUCKET=agentkit-platform-{{your_account_id}} 
 ```
 
 ### 调试方法
@@ -174,30 +167,6 @@ uv run agent.py
 ```
 
 **重要提示**：VikingDB 首次插入文档需要构建向量索引（约 2-5 分钟），首次运行可能报错，请等待索引构建完成后重试。
-
-#### 方式四：部署到火山引擎 veFaaS
-
-**安全提示**：
-> 以下命令仅用于开发测试。生产环境必须启用 `VEFAAS_ENABLE_KEY_AUTH=true`（默认值）并配置 IAM 角色。
-
-```bash
-cd vikingdb
-
-# 配置环境变量（仅测试用）
-export VEFAAS_ENABLE_KEY_AUTH=false
-export VOLCENGINE_ACCESS_KEY=<Your Access Key>
-export VOLCENGINE_SECRET_KEY=<Your Secret Key>
-
-# 基础部署（快速开始）
-veadk deploy --vefaas-app-name=vikingdb-agent --use-adk-web
-
-# 生产级部署（推荐）
-veadk deploy \
-  --vefaas-app-name=vikingdb-agent \
-  --use-adk-web \
-  --veapig-instance-name=<Your veaPIG Instance> \
-  --iam-role "trn:iam::<Your Account ID>:role/<Your IAM Role>"
-```
 
 ## AgentKit 部署
 
@@ -227,7 +196,7 @@ veadk deploy \
 ### AgentKit 云上部署
 
 ```bash
-cd vikingdb
+# 进入到vikingdb目录
 
 # 配置部署参数
 agentkit config
