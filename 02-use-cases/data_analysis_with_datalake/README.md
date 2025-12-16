@@ -178,3 +178,7 @@ Datalake 效果展示。
 ## 常见问题
 
 无。
+
+## 代码许可
+
+本工程遵循 Apache 2.0 License
